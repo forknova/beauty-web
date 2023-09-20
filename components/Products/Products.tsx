@@ -1,10 +1,11 @@
 import Image from 'next/image';
-import axios from 'axios';
 
 const Products = async () => {
-  const {
-    data: { products },
-  } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/shopify/products`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/shopify/products`,
+  );
+
+  const products = await res.json();
 
   return (
     <section>
