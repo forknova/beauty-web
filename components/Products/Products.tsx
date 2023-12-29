@@ -54,6 +54,9 @@ const Products = async () => {
     body: JSON.stringify({
       query,
     }),
+    next: {
+      tags: ['products'],
+    },
   });
 
   const products = await res.json();
