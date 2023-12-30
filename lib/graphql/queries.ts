@@ -4,6 +4,27 @@ export const GET_CART_QUERY = gql`
   query GET_CART_QUERY($id: ID!) {
     cart(id: $id) {
       id
+      lines(first: 5) {
+        edges {
+          node {
+            quantity
+            merchandise {
+              ... on ProductVariant {
+                id
+                title
+                priceV2 {
+                  amount
+                  currencyCode
+                }
+                product {
+                  title
+                  handle
+                }
+              }
+            }
+          }
+        }
+      }
       checkoutUrl
       cost {
         checkoutChargeAmount {
@@ -61,6 +82,34 @@ export const CREATE_CART_MUTATION = gql`
   }
 `;
 
+export const ADD_PRODUCTS_TO_CART_MUTATION = gql`
+  mutation ADD_PRODUCTS_TO_CART_MUTATION($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart {
+        id
+        lines(first: 5) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                }
+              }
+            }
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
 export const GET_PRODUCT_QUERY = gql`
   query GET_PRODUCT_QUERY($id: ID!) {
     product(id: $id) {
@@ -79,4 +128,26 @@ export const GET_PRODUCT_QUERY = gql`
       }
     }
   }
+`;
+
+export const GET_PRODUCTS_QUERY = gql`
+    query GET_PRODUCTS_QUERY {
+      products(first: 10) {
+        edges {
+          node {
+            id
+            title
+            description
+            images(first: 5) {
+              edges {
+                node {
+                  originalSrc
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 `;

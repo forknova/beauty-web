@@ -1,7 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
-import { getCart, createCart, getProduct } from '@/app/actions';
+import {
+  getCart,
+  createCart,
+  getProduct,
+  addProductsToCart,
+} from '@/app/actions';
 
 type AddToBagButtonProps = {
   productId: string;
@@ -17,18 +22,25 @@ const AddToBagButton = ({ productId }: AddToBagButtonProps) => {
         const productVariantId = product.variants.edges[0].node.id;
         const cart = await getCart();
 
-        console.log(`Add ${productVariantId} to bag`);
+        console.log(`Adding 1x ${productVariantId} to bag`);
 
         if (cart) {
-          // TODO: add item to existing cart
+          // add to existing cart
+          console.log('existing cart', JSON.stringify(cart, null, 2));
+          const updatedCart = await addProductsToCart({
+            cartId: cart.id,
+            productVariantId,
+          });
+
+          console.log('updated cart', JSON.stringify(updatedCart, null, 2));
         } else {
-          // TODO: create new cart and add item to it
+          // create a new cart
+          // TODO: pass quantity
           const cart = await createCart({
             productVariantId,
           });
 
-          // TODO: save cartId to session cookie
-          console.log('cart', JSON.stringify(cart, null, 2));
+          console.log('new cart', JSON.stringify(cart, null, 2));
         }
       }}
     >
