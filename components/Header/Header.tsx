@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { cn } from '@/lib/utils';
+import Bag from '@/components/Bag/Bag';
 
 type HeaderProps = {
   className?: string;
@@ -23,11 +24,7 @@ const Header = ({ className }: HeaderProps) => (
         color="var(--color-black)"
         size="xl"
       />
-      <FontAwesomeIcon
-        icon={['far', 'shopping-bag']}
-        color="var(--color-black)"
-        size="xl"
-      />
+      <Bag />
     </section>
   </header>
 );

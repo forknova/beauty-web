@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Button } from '../ui/Button';
+import AddToBagButton from '@/components/buttons/AddToBagButton/AddToBagButton';
 
 type ImageEdge = {
   node: {
@@ -92,7 +92,7 @@ const Products = async () => {
               width={300}
               height={300}
             />
-            <Button>Add to cart</Button>
+            <AddToBagButton productId={product.id} />
           </div>
         ),
       )}
