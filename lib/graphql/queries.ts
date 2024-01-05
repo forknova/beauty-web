@@ -83,7 +83,10 @@ export const CREATE_CART_MUTATION = gql`
 `;
 
 export const ADD_PRODUCTS_TO_CART_MUTATION = gql`
-  mutation ADD_PRODUCTS_TO_CART_MUTATION($cartId: ID!, $lines: [CartLineInput!]!) {
+  mutation ADD_PRODUCTS_TO_CART_MUTATION(
+    $cartId: ID!
+    $lines: [CartLineInput!]!
+  ) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {
         id
@@ -119,7 +122,7 @@ export const GET_PRODUCT_QUERY = gql`
           node {
             id
             price {
-                amount
+              amount
             }
             availableForSale
             quantityAvailable
@@ -131,23 +134,23 @@ export const GET_PRODUCT_QUERY = gql`
 `;
 
 export const GET_PRODUCTS_QUERY = gql`
-    query GET_PRODUCTS_QUERY {
-      products(first: 10) {
-        edges {
-          node {
-            id
-            title
-            description
-            images(first: 5) {
-              edges {
-                node {
-                  originalSrc
-                  altText
-                }
+  query GET_PRODUCTS_QUERY {
+    products(first: 10) {
+      edges {
+        node {
+          id
+          title
+          description
+          images(first: 5) {
+            edges {
+              node {
+                originalSrc
+                altText
               }
             }
           }
         }
       }
     }
+  }
 `;

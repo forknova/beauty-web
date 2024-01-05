@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+
 import { NextRequest } from 'next/server';
 import { revalidateTag } from 'next/cache';
 

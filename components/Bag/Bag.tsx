@@ -9,7 +9,12 @@ const Bag = async () => {
     0,
   );
 
+  // DEBUG:
+  // eslint-disable-next-line no-console
   console.log('cart', JSON.stringify(cart, null, 2));
+
+  // DEBUG:
+  // eslint-disable-next-line no-console
   console.log('cartCount', cartCount);
 
   return (

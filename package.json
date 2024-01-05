@@ -6,9 +6,32 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "prettier": "prettier --ignore-path .gitignore \"**/*.+(js|jsx|json|ts|tsx|html|md)\"",
-    "format": "pnpm run prettier -- --write"
+    "dev:email": "email dev --port 3005",
+    "lint": "jest --config test/jest.lint.ts",
+    "check-types": "tsc",
+    "prettier": "prettier --ignore-path .gitignore --write \"**/*.+(js|jsx|json|ts|tsx|css|html|md)\"",
+    "format": "pnpm prettier --write",
+    "check-format": "pnpm prettier --list-different",
+    "test": "is-ci \"test:coverage\" \"test:watch\"",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch",
+    "prepare": "husky install",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "jest-runner-eslint": {
+    "cliOptions": {
+      "ignorePath": "./.gitignore"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "tsc-files --noEmit ./next-env.d.ts ./custom.d.ts"
+    ],
+    "**/*.+(js|jsx|json|ts|tsx|html|md)": [
+      "prettier --ignore-path .gitignore --write",
+      "jest --findRelatedTests --passWithNoTests"
+    ]
   },
   "dependencies": {
     "@fortawesome/fontawesome-pro": "^6.5.1",
@@ -23,26 +46,45 @@
     "@fortawesome/sharp-regular-svg-icons": "^6.5.1",
     "@fortawesome/sharp-solid-svg-icons": "^6.5.1",
     "@radix-ui/react-slot": "^1.0.2",
-    "@types/node": "20.10.5",
-    "@types/react": "18.2.46",
-    "@types/react-dom": "18.2.18",
-    "autoprefixer": "10.4.16",
+    "@sentry/nextjs": "^7.92.0",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.0",
-    "eslint": "8.56.0",
-    "eslint-config-next": "14.0.4",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
+    "is-ci-cli": "^2.2.0",
     "lucide-react": "^0.303.0",
     "next": "14.0.4",
-    "postcss": "8.4.32",
-    "prettier": "^3.1.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.16",
+    "clsx": "^2.1.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-next": "^14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.6.1",
+    "eslint-plugin-prettier": "^5.1.2",
+    "eslint-plugin-react": "^7.33.2",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-runner-eslint": "^2.1.2",
+    "jest-watch-select-projects": "^2.0.0",
+    "jest-watch-typeahead": "^2.2.2",
+    "lint-staged": "^15.2.0",
+    "postcss": "^8.4.33",
+    "prettier": "^3.1.1",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss": "3.4.0",
+    "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.3.3"
+    "ts-node": "^10.9.2",
+    "tsc-files": "^1.1.4",
+    "typescript": "^5.3.3"
   }
 }

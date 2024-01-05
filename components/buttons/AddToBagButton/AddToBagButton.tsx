@@ -22,25 +22,33 @@ const AddToBagButton = ({ productId }: AddToBagButtonProps) => {
         const productVariantId = product.variants.edges[0].node.id;
         const cart = await getCart();
 
+        // DEBUG:
+        // eslint-disable-next-line no-console
         console.log(`Adding 1x ${productVariantId} to bag`);
 
         if (cart) {
-          // add to existing cart
+          // DEBUG:
+          // eslint-disable-next-line no-console
           console.log('existing cart', JSON.stringify(cart, null, 2));
+          // add to existing cart
           const updatedCart = await addProductsToCart({
             cartId: cart.id,
             productVariantId,
           });
 
+          // DEBUG:
+          // eslint-disable-next-line no-console
           console.log('updated cart', JSON.stringify(updatedCart, null, 2));
         } else {
           // create a new cart
           // TODO: pass quantity
-          const cart = await createCart({
+          const newCart = await createCart({
             productVariantId,
           });
 
-          console.log('new cart', JSON.stringify(cart, null, 2));
+          // DEBUG:
+          // eslint-disable-next-line no-console
+          console.log('new cart', JSON.stringify(newCart, null, 2));
         }
       }}
     >
