@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { cn } from '@/lib/utils';
 import Header from '@/components/Header/Header';
-import './globals.css';
+import '@/global.css';
 
 export const metadata: Metadata = {
   title: 'Afro Hair and Beauty Shop: Premium Black Hair & Beauty Products',
@@ -38,6 +40,7 @@ export default function RootLayout({
         >
           {children}
         </main>
+        <Analytics />
       </body>
     </html>
   );

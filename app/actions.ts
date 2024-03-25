@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { print } from 'graphql';
 import {
@@ -8,14 +9,15 @@ import {
   GET_PRODUCT_QUERY,
   GET_PRODUCTS_QUERY,
   ADD_PRODUCTS_TO_CART_MUTATION,
+  CART_LINE_REMOVE_MUTATION,
 } from '@/lib/graphql/queries';
-import { ProductEdge } from '@/app/types';
-import { revalidateTag } from 'next/cache';
+import { ProductEdge } from '@/types';
 
 export const getCartId = () => cookies().get('cartId')?.value;
 
 export const getCart = async () => {
-  const cartId = getCartId();
+  // TODO: not sure why this needs an await to work but doesnt if calling cookies.get() directly
+  const cartId = await getCartId();
 
   if (!cartId) {
     return null;
@@ -43,7 +45,9 @@ export const getCart = async () => {
   );
 
   const {
-    data: { cart },
+    data: { cart } = {
+      cart: null,
+    },
   } = await res.json();
 
   return cart;
@@ -139,6 +143,50 @@ export const addProductsToCart = async ({
     // Handle any errors
     console.error(userErrors);
     throw new Error('Failed to add product to cart');
+  }
+
+  // update cache
+  revalidateTag('cart');
+
+  return updatedCart;
+};
+
+export const removeProductFromCart = async ({
+  cartId,
+  lineIds,
+}: {
+  cartId: string;
+  lineIds: string[];
+}) => {
+  const res = await fetch(
+    process.env.SHOPIFY_STOREFRONT_API_ENDPOINT as string,
+    {
+      method: 'POST',
+      headers: {
+        'X-Shopify-Storefront-Access-Token': process.env
+          .SHOPIFY_STOREFRONT_ACCESS_TOKEN as string,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: print(CART_LINE_REMOVE_MUTATION),
+        variables: {
+          cartId,
+          lineIds,
+        },
+      }),
+    },
+  );
+
+  const {
+    data: {
+      cartLinesRemove: { cart: updatedCart, errors },
+    },
+  } = await res.json();
+
+  if (errors) {
+    // handle any errors
+    console.error(errors);
+    throw new Error('Failed to remove product from cart');
   }
 
   // update cache

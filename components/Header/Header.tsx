@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faHeart } from '@fortawesome/pro-regular-svg-icons';
 import { cn } from '@/lib/utils';
 import Bag from '@/components/Bag/Bag';
 
@@ -12,19 +14,13 @@ const Header = ({ className }: HeaderProps) => (
       [className as string]: !!className,
     })}
   >
-    <h1>Afro Hair and Beauty.</h1>
+    <Link href="/">Afro Hair and Beauty</Link>
     <section className="flex gap-x-4">
-      <FontAwesomeIcon
-        icon={['far', 'user']}
-        color="var(--color-black)"
-        size="xl"
-      />
-      <FontAwesomeIcon
-        icon={['far', 'heart']}
-        color="var(--color-black)"
-        size="xl"
-      />
-      <Bag />
+      <FontAwesomeIcon icon={faUser} size="xl" className="text-black" />
+      <FontAwesomeIcon icon={faHeart} size="xl" className="text-black" />
+      <Link href="/bag">
+        <Bag />
+      </Link>
     </section>
   </header>
 );

@@ -7,6 +7,7 @@ export const GET_CART_QUERY = gql`
       lines(first: 5) {
         edges {
           node {
+            id
             quantity
             merchandise {
               ... on ProductVariant {
@@ -102,6 +103,42 @@ export const ADD_PRODUCTS_TO_CART_MUTATION = gql`
                 }
               }
             }
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const CART_LINE_REMOVE_MUTATION = gql`
+  mutation CART_LINE_REMOVE_MUTATION($cartId: ID!, $lineIds: [ID!]!) {
+    cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+      cart {
+        id
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  product {
+                    title
+                  }
+                }
+              }
+            }
+          }
+        }
+        cost {
+          totalAmount {
+            amount
+            currencyCode
           }
         }
       }
