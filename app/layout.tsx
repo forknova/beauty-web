@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import { cn } from '@/lib/utils';
+import cn from '@/utils/cn';
 import Header from '@/components/Header/Header';
+import Providers from './providers';
 import '@/global.css';
 
 export const metadata: Metadata = {
@@ -31,15 +32,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header className="mb-12" />
-        <main
-          className={cn(
-            'min-h-screen bg-background font-sans antialiased',
-            fontSans.variable,
-          )}
-        >
-          {children}
-        </main>
+        <Providers>
+          <Header className="mb-12" />
+          <main
+            className={cn(
+              'min-h-screen bg-background font-sans antialiased',
+              fontSans.variable,
+            )}
+          >
+            {children}
+          </main>
+        </Providers>
         <Analytics />
       </body>
     </html>
