@@ -1,4 +1,5 @@
 import { getCart, removeProductFromCart } from '@/app/actions';
+import CheckoutButton from '@/components/buttons/CheckoutButton/CheckoutButton';
 import RemoveFromBagButton from '@/components/buttons/RemoveFromBagButton/RemoveFromBagButton';
 
 const BagPage = async () => {
@@ -29,6 +30,9 @@ const BagPage = async () => {
             </div>
           );
         })}
+      </section>
+      <section>
+        <CheckoutButton url={bag.checkoutUrl} />
       </section>
     </div>
   );
