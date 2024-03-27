@@ -19,7 +19,7 @@ const AddToBagButton = ({ productId }: AddToBagButtonProps) => {
         const product = await getProduct({
           productId,
         });
-        const productVariantId = product.variants.edges[0].node.id;
+        const productVariantId = product.id;
         const cart = await getCart();
 
         if (cart) {

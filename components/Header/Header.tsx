@@ -19,7 +19,9 @@ const Header = ({ className }: HeaderProps) => {
       <Link href="/">Afro Hair and Beauty</Link>
       <section className="flex items-center gap-x-4">
         <FontAwesomeIcon icon={faUser} size="xl" className="text-black" />
-        <FontAwesomeIcon icon={faHeart} size="xl" className="text-black" />
+        <Link href="/saved">
+          <FontAwesomeIcon icon={faHeart} size="xl" className="text-black" />
+        </Link>
         <Link href="/bag">
           <Bag />
         </Link>

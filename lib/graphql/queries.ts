@@ -154,6 +154,16 @@ export const GET_PRODUCT_QUERY = gql`
   query GET_PRODUCT_QUERY($id: ID!) {
     product(id: $id) {
       id
+      title
+      description
+      images(first: 5) {
+        edges {
+          node {
+            originalSrc
+            altText
+          }
+        }
+      }
       variants(first: 1) {
         edges {
           node {

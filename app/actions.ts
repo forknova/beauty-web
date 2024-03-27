@@ -3,6 +3,7 @@
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 import { print } from 'graphql';
+import prisma from '@/lib/prisma';
 import {
   GET_CART_QUERY,
   CREATE_CART_MUTATION,
@@ -12,6 +13,7 @@ import {
   CART_LINE_REMOVE_MUTATION,
 } from '@/lib/graphql/queries';
 import { ProductEdge } from '@/types';
+import { auth } from '@/auth';
 
 export const getCartId = () => cookies().get('cartId')?.value;
 
@@ -218,7 +220,17 @@ export const getProduct = async ({ productId }: { productId: string }) => {
     data: { product },
   } = await res.json();
 
-  return product;
+  const parsedProduct = {
+    id: product.id,
+    title: product.title,
+    description: product.description,
+    image:
+      product.images.edges.length > 0
+        ? product.images.edges[0].node.originalSrc
+        : null,
+  };
+
+  return parsedProduct;
 };
 
 export const getProducts = async () => {
@@ -252,4 +264,126 @@ export const getProducts = async () => {
   }));
 
   return parsedProducts;
+};
+
+export const addProductToSaved = async ({
+  productId,
+}: {
+  productId: string;
+}) => {
+  const session = await auth();
+  const userId = session?.userId;
+
+  if (!userId) {
+    throw new Error('You must be logged in to save a product.');
+  }
+
+  // retrieve the user from the database
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error('You must be logged in to save a product.');
+  }
+
+  // check for existing saved items list
+  const saved = await prisma.saved.findUnique({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  if (saved) {
+    // update the existing saved items list
+    await prisma.saved.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        items: {
+          push: productId,
+        },
+      },
+    });
+  } else {
+    // create a new saved items list if none exists
+    await prisma.saved.create({
+      data: {
+        userId: user.id,
+        // TODO: fix this so we just add an item to the existing arrary
+        items: [productId],
+      },
+    });
+  }
+
+  revalidateTag('saved');
+  revalidateTag('/');
+};
+
+export const removeProductFromSaved = async ({
+  productId,
+}: {
+  productId: string;
+}) => {
+  const session = await auth();
+  const userId = session?.userId;
+
+  if (!userId) {
+    throw new Error('You must be logged in to remove a product.');
+  }
+
+  // retrieve the user from the database
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error('You must be logged in to remove a product.');
+  }
+
+  // check for existing saved items list
+  const saved = await prisma.saved.findUnique({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  if (saved) {
+    // update the existing saved items list
+    await prisma.saved.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        items: {
+          set: saved.items.filter((item) => item !== productId),
+        },
+      },
+    });
+  }
+
+  revalidateTag('saved');
+  revalidateTag('/');
+};
+
+export const getSaved = async (): Promise<string[] | undefined> => {
+  const session = await auth();
+  const userId = session?.userId;
+
+  if (!userId) {
+    return [];
+  }
+
+  const saved = await prisma.saved.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  return saved?.items;
 };

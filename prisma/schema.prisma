@@ -28,7 +28,7 @@ model User {
 
 model Saved {
   id        String   @id @default(cuid())
-  items     Json // store an array of objects, each containing Shopify product ID and variant information
+  items     String[]
   userId    String   @unique
   User      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

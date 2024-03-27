@@ -1,7 +1,17 @@
-const SavedPage = () => {
+import { getProduct, getSaved } from '@/app/actions';
+import ProductsList from '@/components/ProductsList/ProductsList';
+
+const SavedPage = async () => {
+  const saved = await getSaved();
+  const populatedSaved = saved
+    ? await Promise.all(
+        saved.map(async (item) => getProduct({ productId: item })),
+      )
+    : [];
+
   return (
     <div>
-      <h1>Saved Page</h1>
+      <ProductsList products={populatedSaved} saved={saved} />
     </div>
   );
 };
