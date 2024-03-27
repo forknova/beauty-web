@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build",
+    "build": "bunx prisma generate && next build",
     "start": "next start",
     "dev:email": "email dev --port 3005",
     "lint": "jest --config test/jest.lint.ts",
