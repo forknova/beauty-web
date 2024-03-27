@@ -17,12 +17,15 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.next();
   }
 
-  const session = await auth();
-  const userId = session?.userId;
-
   // redirect authenticated users away from sign-in page
-  if (pathname === '/sign-in' && userId) {
-    return NextResponse.redirect(new URL('/', request.url));
+  if (pathname === '/sign-in') {
+    // TODO: this seems to cause a timeout when deployed to Vercel
+    const session = await auth();
+    const userId = session?.userId;
+
+    if (userId) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
   }
 
   return NextResponse.next();
