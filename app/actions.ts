@@ -94,7 +94,7 @@ export const createCart = async ({
   // TODO: only set for session
   // set cart id in cookie
   cookies().set('cartId', cart.id, {
-    maxAge: 60 * 60 * 24 * 365 * 10, // 10 years
+    maxAge: 60 * 60 * 24 * 1, // 1 day
     path: '/',
   });
 
@@ -228,6 +228,7 @@ export const getProduct = async ({ productId }: { productId: string }) => {
       product.images.edges.length > 0
         ? product.images.edges[0].node.originalSrc
         : null,
+    variants: product.variants,
   };
 
   return parsedProduct;

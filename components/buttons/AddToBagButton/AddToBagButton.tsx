@@ -19,7 +19,9 @@ const AddToBagButton = ({ productId }: AddToBagButtonProps) => {
         const product = await getProduct({
           productId,
         });
-        const productVariantId = product.id;
+
+        // TODO: selectiong first variant for now
+        const productVariantId = product.variants.edges[0].node.id;
         const cart = await getCart();
 
         if (cart) {
